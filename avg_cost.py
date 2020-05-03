@@ -24,7 +24,7 @@ trade3 = Trade('KO', 'SELL', datetime3, 8, 58.00)  # [55.00, 2]
 trade4 = Trade('KO', 'BUY', datetime4, 5, 52.00)   # [52.86, 7]
 trade5 = Trade('KO', 'SELL', datetime5, 2, 52.00)  # [52.00, 5]
 
-trades = [trade2, trade4, trade3, trade1, trade5]
+trades = [trade1, trade2, trade3, trade4]
 
 
 def sort_trades_by_datetime(trades_list):
@@ -79,9 +79,9 @@ def calculate_avg_cost_per_share(trades_list):
         else:
             total_shares += trade.shares
             avg_price_per_share = (trade.share_price * (trade.shares / total_shares)) + (
-                avg_price_per_share * (total_shares - trade.shares / total_shares))
+                avg_price_per_share * ((total_shares - trade.shares) / total_shares))
 
-    return avg_price_per_share
+    return [avg_price_per_share, total_shares]
 
 
 print(calculate_avg_cost_per_share(trades))
