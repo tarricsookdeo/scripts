@@ -1,4 +1,5 @@
 import datetime
+import numpy as np
 
 
 class Trade:
@@ -57,3 +58,28 @@ def expense_shares_from_sell_orders(trades_list):
             index += 1
 
     return sorted_buy_trades
+
+
+def calculate_avg_cost_per_share(trades_list):
+    """Returns the average cost per share of a specific ticker symbol by using
+       a list of all trades for that ticker symbol.
+    """
+    total_shares = 0
+    avg_price_per_share = 0.00
+
+    sorted_and_expensed_buy_orders = expense_shares_from_sell_orders(
+        trades_list)
+
+    for trade in sorted_and_expensed_buy_orders:
+        if total_shares == 0 and avg_price_per_share == 0.00:
+            total_shares = trade.shares
+            avg_price_per_share = trade.share_price
+        else:
+            total_shares += trade.shares
+            avg_price_per_share = np.average([trade.share_price, avg_price_per_share], weights=[
+                                             trade.shares / total_shares, total_shares / (total_shares - trade.shares)])
+
+    return avg_price_per_share
+
+
+calculate_avg_cost_per_share(trades)
