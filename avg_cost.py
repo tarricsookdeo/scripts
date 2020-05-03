@@ -1,5 +1,4 @@
 import datetime
-import numpy as np
 
 
 class Trade:
@@ -23,7 +22,7 @@ trade1 = Trade('KO', 'BUY', datetime1, 5, 50.00)   # [50.00, 5]
 trade2 = Trade('KO', 'BUY', datetime2, 5, 55.00)   # [52.50, 10]
 trade3 = Trade('KO', 'SELL', datetime3, 8, 58.00)  # [55.00, 2]
 trade4 = Trade('KO', 'BUY', datetime4, 5, 52.00)   # [52.86, 7]
-trade5 = Trade('KO', 'SELL', datetime5, 2, 52.00)   # [52.00, 5]
+trade5 = Trade('KO', 'SELL', datetime5, 2, 52.00)  # [52.00, 5]
 
 trades = [trade2, trade4, trade3, trade1, trade5]
 
@@ -57,7 +56,10 @@ def expense_shares_from_sell_orders(trades_list):
             sorted_buy_trades[index].shares = 0
             index += 1
 
-    return sorted_buy_trades
+    filtered_and_sorted_buy_trades = [
+        x for x in sorted_buy_trades if x.shares != 0]
+
+    return filtered_and_sorted_buy_trades
 
 
 def calculate_avg_cost_per_share(trades_list):
@@ -76,10 +78,10 @@ def calculate_avg_cost_per_share(trades_list):
             avg_price_per_share = trade.share_price
         else:
             total_shares += trade.shares
-            avg_price_per_share = np.average([trade.share_price, avg_price_per_share], weights=[
-                                             trade.shares / total_shares, total_shares / (total_shares - trade.shares)])
+            avg_price_per_share = (trade.share_price * (trade.shares / total_shares)) + (
+                avg_price_per_share * (total_shares - trade.shares / total_shares))
 
     return avg_price_per_share
 
 
-calculate_avg_cost_per_share(trades)
+print(calculate_avg_cost_per_share(trades))
